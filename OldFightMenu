@@ -1,0 +1,89 @@
+  public static void fightMenu() {
+
+        // monster is deleted from list for each player victory. if empty = player win.
+        if (monsterList.isEmpty()) {
+            winTheGame();
+        }
+
+        // Generate random monster from the 'monsterList' Arraylist.
+        Random random = new Random();
+        int randomIndex = random.nextInt(monsterList.size());
+        Monster randomMonster = monsterList.get(randomIndex);
+
+        // Player info about current Level and which monster is next.
+        System.out.println("\n--- Level " + player.getLevel() + " ---");
+        System.out.println("The filthy monster called " + randomMonster.getName() + " appears! Health: " + randomMonster.getHealth() + ", Strength: " + randomMonster.getStrength());
+
+        // Actual fight-logic is executed:
+
+
+
+        while (true) {
+
+
+            System.out.println(player.getName() + ", your health is: " + player.getHealth());
+            System.out.print("What would you like to do? Enter [1] to 'Fight' [2] to 'Flee'");
+
+            int choice = scan.nextInt();
+            switch (choice) {
+
+
+
+                case 1 -> {
+
+                    int damageToMonster = player.fight();
+                    int damageToPlayer = randomMonster.fight();
+
+                    System.out.println("You deal " + damageToMonster + " damage to the monster.");
+                    System.out.println("The monster strikes back and deals " + damageToPlayer + " damage to you.");
+
+                    player.setHealth(player.getHealth() - damageToPlayer);
+                    randomMonster.setHealth(randomMonster.getHealth() - damageToMonster);
+
+                    if (randomMonster.getHealth() <= 0 && player.getHealth() <= 0) {
+                        System.out.println("You both died. Game Over");
+                        gameOver();
+
+                    } else if (randomMonster.getHealth() <= 0 && player.getHealth() >= 1) {
+                        System.out.println("You defeated the monster! You are rewarded!");
+                        System.out.println("");
+
+                        System.out.println("Player level before adding experience: " + player.getLevel());
+                        player.increaseLevel(50);
+                        System.out.println("Player level after adding experience: " + player.getLevel());
+
+                        System.out.println("MonsterList before remove Monster: " + monsterList.size());
+                        monsterList.remove(randomMonster);
+                        System.out.println("monsterList after remove Monster: " + monsterList.size());
+                        System.out.println("");
+
+                        player.setHealth(player.getHealth() + 50);
+
+                    } else {
+                        gameOver();
+                    }
+                }
+
+                case 2 -> {
+                    while (true) {
+
+                        if (random.nextBoolean()) {
+                            System.out.println("You successfully flee from the monster - You got rewarded!");
+                            player.setExperience(player.getExperience() + 5);
+                            player.setAgility(player.getAgility() + 10);
+                            break;
+
+                        } else {
+                            System.out.println("You tried to flee, but the monster caught up and attacked you. You lost -" + player.getHealth() + "' in health!");
+                            player.setHealth(player.getHealth() - random.nextInt(randomMonster.fight()));
+                        }
+
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+
+
+    }
