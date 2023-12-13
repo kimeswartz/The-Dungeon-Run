@@ -11,8 +11,7 @@ public class Main {
                 "Get out by improving your skills, growing stronger and wiping out those creatures!");
 
         GameLogics.createAndSetPlayer();
-        // GameLogics.getFightMenu();
         MainMenuView.mainMenuView();
-
     }
+
 }

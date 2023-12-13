@@ -15,8 +15,8 @@ public class StoreView {
         while (true) {
 
             System.out.println("Store menu: ");
-            System.out.println(BLUE + "In the shop you can find items that can help you defeat monsters. " +
-                    "To buy, you need coins, which the monsters obtain.");
+            System.out.println(BLUE + "In this shop you can find things that can help you get ahead!" +
+                    "To trade you need coins, which you can find by taking battles!");
 
             System.out.println(BLUE + "[1]" + RESET + " Buy items");
             System.out.println(BLUE + "[2]" + RESET + " Back to 'Gameplay' menu");

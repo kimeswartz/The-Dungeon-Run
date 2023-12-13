@@ -41,7 +41,8 @@ public class Player extends Combat {
         System.out.println("Health: " + getHealth());
         System.out.println("Agility: " + getAgility());
         System.out.println("Strength: " + getStrength());
-        System.out.println("Coins:" + getCoins() + RESET);
+        System.out.println("Coins: " + getCoins() + RESET);
+
     }
 
     public void increaseLevel(int amountOfExp) {
@@ -54,6 +55,7 @@ public class Player extends Combat {
             setStrength(getStrength() + 2);
             setIntelligence(getIntelligence() + 2);
             setAgility(getAgility() + 2);
+
         }
         System.out.println("Player level: ");
         System.out.println(getLevel());

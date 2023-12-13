@@ -13,6 +13,7 @@ public abstract class Combat {
     }
 
     public Combat() {
+
     }
 
     public int getStrength() {
