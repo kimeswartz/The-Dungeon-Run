@@ -18,7 +18,9 @@ public class MainMenuView {
             System.out.println(GREEN + "[1]" + RESET + " Get into the Game");
             System.out.println(YELLOW + "[2]" + RESET + " Check player status");
             System.out.println(YELLOW + "[3]" + RESET + " About the game");
-            System.out.println(RED + "[4]" + RESET + " Exit the Game");
+            System.out.println(YELLOW + "[4]" + RESET + " Retrieve saved game");
+
+            System.out.println(RED + "[5]" + RESET + " Exit and save");
 
             String userInput = scan.nextLine();
 

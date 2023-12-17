@@ -1,5 +1,6 @@
 package com.kimswartz.app.gamePlay;
 
+import com.kimswartz.app.DungeonGameDatabase;
 import com.kimswartz.app.fighters.Monster;
 import com.kimswartz.app.fighters.Player;
 
@@ -12,6 +13,9 @@ import static com.kimswartz.app.gamePlay.GameLogics.monsterList;
 public class Fight {
 
     public static void playerAndMonsterFight(Player player, Monster monster) {
+
+        DungeonGameDatabase autoSaveMonsters = new DungeonGameDatabase();
+        autoSaveMonsters.monsterToDatabase(monster, player);
 
         // Loop the attack(s) while health is > 0
         while (player.getHealth() > 0 && monster.getHealth() > 0) {
@@ -76,7 +80,13 @@ public class Fight {
 
                 player.setExperience(player.getExperience() + 25);
                 player.increaseLevel(player.getExperience());
+
+                autoSaveMonsters.saveMonsterToGameDatabase(monster, player);
+
                 monsterList.remove(monster);
+                DefeatedMonsters.addDefeatedMonsters(monster);
+
+
                 player.setHealth(player.getHealth() + 10);
                 player.setCoins((player.getCoins() + 2));
 
@@ -94,7 +104,9 @@ public class Fight {
                                 + GREEN + player.getName() + " [Health status: " + player.getHealth() + "]" + RESET);
             }
 
+            autoSaveMonsters.savePlayerDefeatedByMonsterDatabase(player, monster);
             GameOver.gameOverIfPlayerDies(player, monster);
+
 
         }
     }

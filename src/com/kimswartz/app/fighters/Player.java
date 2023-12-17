@@ -1,10 +1,10 @@
 package com.kimswartz.app.fighters;
 
-import static com.kimswartz.app.colors.ChooseColors.GREEN;
-import static com.kimswartz.app.colors.ChooseColors.RESET;
+import static com.kimswartz.app.colors.ChooseColors.*;
 
 public class Player extends Combat {
 
+    private int ID;
     private String name;
     private int intelligence;
     private int experience;
@@ -26,6 +26,14 @@ public class Player extends Combat {
         super();
     }
 
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -36,12 +44,14 @@ public class Player extends Combat {
 
     public void getPlayerInfo() {
 
-        System.out.println(GREEN + "Player name: " + getName());
+        System.out.println("ID: " + getID());
+        System.out.println("Name: " + getName());
         System.out.println("Level: " + getLevel());
         System.out.println("Health: " + getHealth());
         System.out.println("Agility: " + getAgility());
         System.out.println("Strength: " + getStrength());
         System.out.println("Coins: " + getCoins() + RESET);
+        // Add monster.List.size here
 
     }
 

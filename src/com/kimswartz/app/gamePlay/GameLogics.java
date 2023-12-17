@@ -1,6 +1,5 @@
 package com.kimswartz.app.gamePlay;
 
-import static com.kimswartz.app.colors.ChooseColors.*;
 import static com.kimswartz.app.myScanner.MyScanner.*;
 
 import com.kimswartz.app.DungeonGameDatabase;
@@ -9,6 +8,7 @@ import com.kimswartz.app.menuView.GamePlayView;
 import com.kimswartz.app.fighters.Player;
 import com.kimswartz.app.fighters.Monster;
 
+import java.rmi.dgc.DGC;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -25,35 +25,46 @@ public class GameLogics {
 
         SetPlayer.setAndGreetPlayer(player);
 
+        DungeonGameDatabase DGD = new DungeonGameDatabase();
+        DGD.openGameDatabase(player);
+
+
         // Set Monsters and put them into monsterList;
         int[] monsterStrength = {25, 30, 35, 40, 45, 55, 66, 80, 20, 15, 10};
         int[] monsterHealth = {55, 60, 65, 70, 75, 85, 90, 95, 40, 30, 20};
         int[] monsterDamage = {5, 15, 20, 25, 30, 30, 20, 10, 8, 7, 6};
         String[] monsterNames = {"Dusty", "Muddy", "Clay", "Ashy", "Bloody", "Winy", "Inky", "Grassy", "Scratchy", "Foggy", "Musty"};
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 11; i++) {
             monsterList.add(new Monster(monsterStrength[i], monsterHealth[i], monsterDamage[i], monsterNames[i]));
+
+
         }
+
     }
 
 
     public static void startTheGame() {
 
-        DungeonGameDatabase DGB = new DungeonGameDatabase();
-        DGB.openGameDatabase(player);
-
         while (true) {
 
+            // Auto Save to database
+            DungeonGameDatabase autoSaveToDatabase = new DungeonGameDatabase();
+            autoSaveToDatabase.updatePlayerToDatabase(player);
 
 
             // Check if player wins the game
             if (monsterList.isEmpty()) PlayerWin.winTheGame();
-            if (player.getLevel() >= 5) PlayerWin.winTheGameByLevel();
+            if (player.getLevel() >= 8) PlayerWin.winTheGameByLevel();
 
             // Generate random monsters
             Random random = new Random();
             int randomIndex = random.nextInt(monsterList.size());
             Monster randomMonster = monsterList.get(randomIndex);
+
+            // Samla Infrmation om Monstret:
+
+
 
             // Display game status
             GameStatus.displayGameStatus(player, randomMonster);
@@ -61,15 +72,17 @@ public class GameLogics {
             // In-Game menu
             FightOrFleeMenu.displayGameMenu();
 
+
             // UserInput controlled by regex. (Checker is at the bottom of the file).
             String userInput = scan.nextLine();
             if (isValidInput(userInput)) {
                 int choice = Integer.parseInt(userInput);
                 switch (choice) {
 
+
                     case 1 -> Fight.playerAndMonsterFight(player, randomMonster);
                     case 2 -> Flee.playerFleeTheFight(player, randomMonster);
-                    case 3 -> checkPlayerStatus();
+                    case 3 -> PlayerStatus.displayPlayerStatus(player);
                     case 4 -> GamePlayView.getGameView();
 
                     default -> System.out.println("Invalid input, please try again [ 1 - 4 ]");

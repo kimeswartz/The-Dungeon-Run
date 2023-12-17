@@ -5,25 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2352667-eed6-4b3e-ac4a-88644f5afd3d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DataBaseToDo" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/DungeonGameDatabase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Fight.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Flee.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameOver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/PlayerWin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/SetPlayer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Store.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/FightOrFleeMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/DefeatedMonsters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/PlayerStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dungeon_Run.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Dungeon_Run.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/fighters/Combat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/fighters/Combat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/DungeonGameDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/DungeonGameDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/ReadME" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/ReadME" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/fighters/Monster.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/fighters/Monster.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/fighters/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/fighters/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Fight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Fight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Flee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/Flee.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameLogics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameLogics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/GamePlayView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/GamePlayView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/StoreView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/StoreView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameOver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameOver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/GameStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/SetPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/gamePlay/SetPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/FightOrFleeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/FightOrFleeMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/MainMenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/kimswartz/app/menuView/MainMenuView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,11 +147,6 @@
           <properties class="java.util.NoSuchElementException" package="java.util" />
           <option name="timeStamp" value="3" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/kimswartz/app/DungeonGameDatabase.java</url>
-          <line>98</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

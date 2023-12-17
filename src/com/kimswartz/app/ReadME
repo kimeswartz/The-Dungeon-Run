@@ -11,3 +11,154 @@ In the game there is a shop where the player can buy items to improve their skil
 The player has passed the game when he reaches level 5, or when all monsters are defeated.
 
 Good luck!
+
+
+
+public class DungeonGameDatabase {
+
+    // Replace with your MariaDB connection details
+    private String jdbcUrl = "jdbc:mariadb://localhost:3306/Dungeon_Run_Savings";
+    private String username = "root";
+    private String password = "erik";
+
+
+    public void openGameDatabase(Player player) {
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+            // Create the players table if it doesn't exist
+
+            // Save player data
+            savePlayerData(connection, player.getID(), player.getName(), player.getStrength(), player.getIntelligence(), player.getAgility(), player.getLevel(), player.getCoins());
+
+            // Retrieve and display player data
+            retrieveAndDisplayPlayers(connection);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // For each loop
+    public void updatePlayerToDatabase(Player player) {
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+            // Create the players table if it doesn't exist
+
+            updatePlayerStatusToDatabase(connection, player.getID(), player.getName(), player.getStrength(), player.getIntelligence(), player.getAgility(), player.getLevel(), player.getCoins());
+
+            // Retrieve and display player data
+            retrieveAndDisplayPlayers(connection);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+/*
+
+    private static void createPlayersTable(Connection connection) {
+        String createTableSql = "CREATE TABLE IF NOT EXISTS players ("
+                + "playerID INT AUTO_INCREMENT PRIMARY KEY,"
+                + "playerName VARCHAR(255) NOT NULL,"
+                + "playerLevel INT,";
+
+
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(createTableSql)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+ */
+
+
+
+    public void savePlayerData(Connection connection, int PlayerID, String PlayerName, int PlayerStrenght, int PlayerIntelligence, int PlayerExperience, int PlayerAgility, int PlayerLevel, int PlayerCoins) {
+
+        String insertPlayerSql = "INSERT INTO PlayerInfo (PlayerID, PlayerName, PlayerStrenght, PlayerIntelligence, PlayerExperience, PlayerAgility, PlayerLevel, PlayerCoins) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql))
+        {
+            preparedStatement.setInt(1, PlayerID);
+            preparedStatement.setString(2, PlayerName);
+            preparedStatement.setInt(3, PlayerStrenght);
+            preparedStatement.setInt(4, PlayerIntelligence);
+            preparedStatement.setInt(5, PlayerExperience);
+            preparedStatement.setInt(6, PlayerAgility);
+            preparedStatement.setInt(7, PlayerLevel);
+            preparedStatement.setInt(8, PlayerCoins);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println("Rows inserted: " + rowsInserted);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private static void retrieveAndDisplayPlayers(Connection connection) {
+        String selectPlayersSql = "SELECT * FROM PlayerInfo";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectPlayersSql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            System.out.println("Player Data:");
+            System.out.println("Player ID | Player Name | Player Strength | Player Intelligence | Player Experience | Player Agility | Player Level | Player Coins");
+            System.out.println("----------------------------------");
+
+            while (resultSet.next()) {
+                Integer playerId = resultSet.getInt("PlayerID");
+                String playerName = resultSet.getString("PlayerName");
+                Integer PlayerStrenght = resultSet.getInt("PlayerStrenght");
+                Integer playerIntelligence = resultSet.getInt("PlayerIntelligence");
+                Integer playerExperience = resultSet.getInt("PlayerExperience");
+                Integer playerAgility = resultSet.getInt("PlayerAgility");
+                Integer playerLevel = resultSet.getInt("PlayerLevel");
+                Integer playerCoins = resultSet.getInt("PlayerCoins");
+
+                System.out.println(playerId + " | " + playerName + " | " + PlayerStrenght + " | " + playerIntelligence + " | " + playerExperience + " | " + playerAgility + " | " + playerLevel + " | " + playerCoins);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //Update Player for each loop
+    private static void updatePlayerStatusToDatabase(Connection connection, int PlayerID, String PlayerName, int PlayerStrenght, int PlayerIntelligence, int PlayerExperience, int PlayerAgility, int PlayerLevel, int PlayerCoins) throws SQLException {
+        // SQL UPDATE statement
+        String updateSql = "UPDATE playerStatus SET PlayerStrenght = ?, PlayerIntelligence = ?, PlayerExperience = ?, PlayerAgility = ?, PlayerLevel = ?, PlayerCoins = ? WHERE PlayerName = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+            // Set parameters
+
+            preparedStatement.setInt(1, PlayerID);
+            preparedStatement.setString(2, PlayerName);
+            preparedStatement.setInt(3, PlayerStrenght);
+            preparedStatement.setInt(4, PlayerIntelligence);
+            preparedStatement.setInt(5, PlayerExperience);
+            preparedStatement.setInt(6, PlayerAgility);
+            preparedStatement.setInt(7, PlayerLevel);
+            preparedStatement.setInt(8, PlayerCoins);
+
+
+            // Execute the update
+            preparedStatement.executeUpdate();
+            System.out.println("Player level updated successfully.");
+        }
+
+
+
+
+    }
+
+
+}

@@ -1,5 +1,6 @@
 package com.kimswartz.app.gamePlay;
 
+import com.kimswartz.app.DungeonGameDatabase;
 import com.kimswartz.app.fighters.Monster;
 import com.kimswartz.app.fighters.Player;
 
@@ -12,6 +13,9 @@ import static com.kimswartz.app.gamePlay.GameLogics.monsterList;
 public class Flee {
 
     public static void playerFleeTheFight(Player player, Monster monster) {
+
+        DungeonGameDatabase autoSaveMonsters = new DungeonGameDatabase();
+        autoSaveMonsters.monsterToDatabase(monster, player);
 
         Random random = new Random();
 

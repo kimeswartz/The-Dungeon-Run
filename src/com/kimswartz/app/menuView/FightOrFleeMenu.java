@@ -11,7 +11,7 @@ public class FightOrFleeMenu {
         System.out.println(YELLOW + "[1] Fight!");
         System.out.println("[2] Flee");
         System.out.println("[3] Player Status");
-        System.out.println("[4] Back to Menu" + RESET);
+        System.out.println("[4] Back to main menu");
 
     }
 

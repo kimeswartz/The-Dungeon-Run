@@ -25,7 +25,6 @@ public class GameStatus {
 
         recommendPlayerToImproveHealth(player, monster);
 
-
         // Game starts here
         System.out.println
                 (GREEN + player.getName() + " - Your health is: [" + player.getHealth()

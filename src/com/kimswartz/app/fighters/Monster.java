@@ -14,6 +14,6 @@ public class Monster extends Combat {
     }
 
     public String toString() {
-        return "Monster " + name + " , has " + getStrength() + "* strength and health " + getHealth() + "*";
+        return name;
     }
 }
