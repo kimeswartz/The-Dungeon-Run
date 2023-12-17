@@ -31,7 +31,7 @@ public class SetPlayer {
         // Generate a random number between 1 and 500
         int randomNumber = random.nextInt(1000) + 1;
 
-        player.setID(randomNumber);
+        player.setNumber(randomNumber);
 
 
         return randomNumber;

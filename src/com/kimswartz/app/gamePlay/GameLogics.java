@@ -26,7 +26,7 @@ public class GameLogics {
         SetPlayer.setAndGreetPlayer(player);
 
         DungeonGameDatabase DGD = new DungeonGameDatabase();
-        DGD.openGameDatabase(player);
+        DGD.savePlayer(player);
 
 
         // Set Monsters and put them into monsterList;
@@ -38,7 +38,6 @@ public class GameLogics {
         for (int i = 0; i < 11; i++) {
             monsterList.add(new Monster(monsterStrength[i], monsterHealth[i], monsterDamage[i], monsterNames[i]));
 
-
         }
 
     }
@@ -49,13 +48,13 @@ public class GameLogics {
         while (true) {
 
             // Auto Save to database
-            DungeonGameDatabase autoSaveToDatabase = new DungeonGameDatabase();
-            autoSaveToDatabase.updatePlayerToDatabase(player);
+            DungeonGameDatabase autoSave = new DungeonGameDatabase();
+            autoSave.autoSaveAndUpdatePlayer(player);
 
 
             // Check if player wins the game
-            if (monsterList.isEmpty()) PlayerWin.winTheGame();
-            if (player.getLevel() >= 8) PlayerWin.winTheGameByLevel();
+            if (monsterList.isEmpty()) PlayerWin.winTheGame(player);
+            if (player.getLevel() >= 8) PlayerWin.winTheGameByLevel(player);
 
             // Generate random monsters
             Random random = new Random();

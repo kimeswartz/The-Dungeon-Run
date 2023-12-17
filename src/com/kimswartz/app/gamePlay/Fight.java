@@ -14,8 +14,9 @@ public class Fight {
 
     public static void playerAndMonsterFight(Player player, Monster monster) {
 
-        DungeonGameDatabase autoSaveMonsters = new DungeonGameDatabase();
-        autoSaveMonsters.monsterToDatabase(monster, player);
+
+        DungeonGameDatabase registerBattleWinner = new DungeonGameDatabase();
+
 
         // Loop the attack(s) while health is > 0
         while (player.getHealth() > 0 && monster.getHealth() > 0) {
@@ -80,8 +81,9 @@ public class Fight {
 
                 player.setExperience(player.getExperience() + 25);
                 player.increaseLevel(player.getExperience());
+                registerBattleWinner.registerPlayerWin(player, monster);
 
-                autoSaveMonsters.saveMonsterToGameDatabase(monster, player);
+               // autoSaveMonsters.saveMonsterToGameDatabase(monster, player);
 
                 monsterList.remove(monster);
                 DefeatedMonsters.addDefeatedMonsters(monster);
@@ -104,9 +106,8 @@ public class Fight {
                                 + GREEN + player.getName() + " [Health status: " + player.getHealth() + "]" + RESET);
             }
 
-            autoSaveMonsters.savePlayerDefeatedByMonsterDatabase(player, monster);
+           // autoSaveMonsters.savePlayerDefeatedByMonsterDatabase(player, monster);
             GameOver.gameOverIfPlayerDies(player, monster);
-
 
         }
     }

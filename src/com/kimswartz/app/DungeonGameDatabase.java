@@ -10,23 +10,24 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.ToDoubleBiFunction;
 
 public class DungeonGameDatabase {
 
     // Replace with your MariaDB connection details
-    private String jdbcUrl = "jdbc:mariadb://localhost:3306/Dungeon_Run_Savings";
+    private String jdbcUrl = "jdbc:mariadb://localhost:3306/DungeonRun";
     private String username = "root";
     private String password = "erik";
 
-    public void openGameDatabase(Player player) {
+
+    public void savePlayer(Player player) {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
 
-            // Save player data
-            savePlayerData(connection, player.getID(), player.getName(), player.getStrength(), player.getIntelligence(), player.getAgility(), player.getLevel(), player.getCoins());
+            // Save Player
+            createPlayer(connection, player.getNumber(), player.getName(), player.getHealth(), player.getStrength(), player.getIntelligence(), player.getAgility(), player.getLevel(), player.getCoins());
 
-            //retrieveAndDisplayPlayers(connection);
-            displayPlayerInitialStatus(connection, player);
+            displayPlayerStatus(connection, player);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,184 +35,89 @@ public class DungeonGameDatabase {
     }
 
 
+    // Push New Player
+    public void createPlayer(Connection connection, int PlayerNumber, String PlayerName, int PlayerHealth, int PlayerStrength, int PlayerIntelligence, int PlayerAgility, int PlayerLevel, int PlayerCoins) {
 
-    public void monsterToDatabase(Monster monster, Player player) {
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-
-            // Save player data
-            saveMonsterData(connection, monster.getName(), monster.getStrength(), player.getID());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    // Save to 'MonsterDefeatedByPlayer' table
-    public void saveMonsterToGameDatabase(Monster monster, Player player) {
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-
-
-            saveDefeatedMonsterData(connection, monster.getName(), player.getID(), player.getName());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Save to 'PlayerDefeatedByMonster' table
-    public void savePlayerDefeatedByMonsterDatabase(Player player, Monster monster) {
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-
-            // Save monster data
-            saveDefeatedPlayerData(connection, player.getID(), player.getName(), monster.getName(), player.getID());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // 'Auto save' player status method
-    public void updatePlayerToDatabase(Player player) {
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-
-            updatePlayerStatusToDatabase(connection, player.getID(), player.getName(), player.getStrength(), player.getIntelligence(), player.getAgility(), player.getLevel(), player.getCoins());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Table: PlayerAutoSave
-    public void savePlayerData(Connection connection, int PlayerID, String PlayerName, int PlayerStrenght, int PlayerIntelligence, int PlayerAgility, int PlayerLevel, int PlayerCoins) {
-
-        String insertPlayerSql = "INSERT INTO PlayerAutoSave (PlayerID, PlayerName, PlayerStrenght, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertPlayerSql = "INSERT INTO AutoSavePlayers (PlayerNumber, PlayerName, PlayerHealth, PlayerStrength, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
-            preparedStatement.setInt(1, PlayerID);
+            preparedStatement.setInt(1, PlayerNumber);
             preparedStatement.setString(2, PlayerName);
-            preparedStatement.setInt(3, PlayerStrenght);
+            preparedStatement.setInt(3, PlayerHealth);
+            preparedStatement.setInt(4, PlayerStrength);
+            preparedStatement.setInt(5, PlayerIntelligence);
+            preparedStatement.setInt(6, PlayerAgility);
+            preparedStatement.setInt(7, PlayerLevel);
+            preparedStatement.setInt(8, PlayerCoins);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println(CYAN + "['New Player' successfully added to the 'Player'- table. " + rowsInserted + " Row]" + RESET);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    // 'Auto save' player:
+    public void autoSaveAndUpdatePlayer(Player player) {
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+
+            autoSavePlayer(connection, player.getNumber(), player.getName(), player.getHealth(), player.getStrength(), player.getIntelligence(), player.getAgility(), player.getLevel(), player.getCoins());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Auto Save Player
+    private static void autoSavePlayer(Connection connection, int PlayerNumber, String PlayerName, int PlayerHealth, int PlayerStrength, int PlayerIntelligence, int PlayerAgility, int PlayerLevel, int PlayerCoins) throws SQLException {
+
+        String updateSql = "UPDATE AutoSavePlayers SET PlayerName = ?, PlayerHealth = ?, PlayerStrength = ?, PlayerIntelligence = ?, PlayerAgility = ?, PlayerLevel = ?, PlayerCoins = ? WHERE PlayerNumber = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+            // Set parameters
+
+            preparedStatement.setString(1, PlayerName);
+            preparedStatement.setInt(2, PlayerHealth);
+            preparedStatement.setInt(3, PlayerStrength);
             preparedStatement.setInt(4, PlayerIntelligence);
             preparedStatement.setInt(5, PlayerAgility);
             preparedStatement.setInt(6, PlayerLevel);
             preparedStatement.setInt(7, PlayerCoins);
+            preparedStatement.setInt(8, PlayerNumber);
 
-            int rowsInserted = preparedStatement.executeUpdate();
-            System.out.println(CYAN + "['Player' successfully added to the database, rows: " + rowsInserted + "]" + RESET);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    // Table: Monsters
-    public void saveMonsterData(Connection connection, String MonsterName, int MonsterStrength, int PlayerById) {
-
-        String insertMonsterSql = "INSERT INTO GameMonsters (MonsterName, MonsterStrength, PlayerById) VALUES (?, ?, ?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertMonsterSql)) {
-            preparedStatement.setString(1, MonsterName);
-            preparedStatement.setInt(2, MonsterStrength);
-            preparedStatement.setInt(3, PlayerById);
-
-            int rowsInserted = preparedStatement.executeUpdate();
-            System.out.println(CYAN + "['Monster' was successfully added to the database, rows: " + rowsInserted + "]" + RESET);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-    public void saveDefeatedMonsterData(Connection connection, String MonsterName, int PlayerID, String PlayerName) {
-
-        String insertMonsterSql = "INSERT INTO MonsterDefeatedByPlayer (MonsterName, PlayerById, PlayerByName) VALUES (?, ?, ?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertMonsterSql)) {
-            preparedStatement.setString(1, MonsterName);
-            preparedStatement.setInt(2, PlayerID);
-            preparedStatement.setString(3, PlayerName);
-
-            int rowsInserted = preparedStatement.executeUpdate();
-            System.out.println(CYAN + "['Defeated monster' was successfully added to the database, rows: " + rowsInserted + "]" + RESET);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void saveDefeatedPlayerData(Connection connection, int PlayerID, String PlayerByName, String MonsterName, int PlayerById) {
-
-        String insertMonsterAndPlayerSql = "INSERT INTO PlayerDefeatedByMonster (PlayerID, PlayerByName, MonsterName, PlayerById) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertMonsterAndPlayerSql)) {
-            preparedStatement.setInt(1, PlayerID);
-            preparedStatement.setString(2, PlayerByName);
-            preparedStatement.setString(3, MonsterName);
-            preparedStatement.setInt(4, PlayerById);
-
-            int rowsInserted = preparedStatement.executeUpdate();
-            System.out.println(CYAN + "['Defeated player' was successfully added to the database, rows: " + rowsInserted + "]" + RESET);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // Display player status
-    private static void retrieveAndDisplayPlayers(Connection connection) {
-        String selectPlayersSql = "SELECT * FROM PlayerAutoSave";
-
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(selectPlayersSql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            System.out.println("Player Data:");
-            System.out.println("Player ID | Player Name | Player Strength | Player Intelligence | Player Agility | Player Level | Player Coins");
-            System.out.println("----------------------------------");
-
-            while (resultSet.next()) {
-                Integer playerId = resultSet.getInt("PlayerID");
-                String playerName = resultSet.getString("PlayerName");
-                Integer PlayerStrenght = resultSet.getInt("PlayerStrenght");
-                Integer playerIntelligence = resultSet.getInt("PlayerIntelligence");
-                Integer playerAgility = resultSet.getInt("PlayerAgility");
-                Integer playerLevel = resultSet.getInt("PlayerLevel");
-                Integer playerCoins = resultSet.getInt("PlayerCoins");
-
-                System.out.println(playerId + " | " + playerName + " | " + PlayerStrenght + " | " + playerIntelligence + " | " + playerAgility + " | " + playerLevel + " | " + playerCoins);
+            // Execute the update
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println(CYAN + "'Player Status' auto-saved successfully to database" + RESET);
+            } else {
+                System.out.println(RED + "No rows updated. Player with PlayerNumber " + PlayerNumber + " not found." + RESET);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
 
     // Display player status
-    private static void displayPlayerInitialStatus(Connection connection, Player player) {
+    private static void displayPlayerStatus(Connection connection, Player player) {
 
-        String selectPlayersSql = "SELECT PlayerName, PlayerStrenght, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins FROM PlayerAutoSave WHERE PlayerID = ?";
+        String selectPlayersSql = "SELECT PlayerName, PlayerStrength, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins FROM AutoSavePlayers WHERE PlayerNumber = ?";
+
         try (PreparedStatement selectStatement = connection.prepareStatement(selectPlayersSql)) {
-            // Assuming playerId is the value you want to retrieve
-            int playerId = player.getID();  // Replace with the actual PlayerID value
+            // playerNumber is the value we want to retrieve
+            int PlayerNumber = player.getNumber();  // Replace with the actual PlayerID value
 
             // Set the parameter value for the placeholder (?)
-            selectStatement.setInt(1, playerId);
+            selectStatement.setInt(1, PlayerNumber);
 
             // Execute the query
             try (ResultSet resultSet = selectStatement.executeQuery()) {
                 if (resultSet.next()) {
                     // Retrieve and display the data
                     String playerName = resultSet.getString("PlayerName");
-                    int playerStrength = resultSet.getInt("PlayerStrenght");
+                    int PlayerStrength = resultSet.getInt("PlayerStrength");
                     int playerIntelligence = resultSet.getInt("PlayerIntelligence");
                     int playerAgility = resultSet.getInt("PlayerAgility");
                     int playerLevel = resultSet.getInt("PlayerLevel");
@@ -221,7 +127,7 @@ public class DungeonGameDatabase {
                     System.out.println(CYAN + "Player's properties retrieved from database: ");
 
                     System.out.println("PlayerName: " + playerName);
-                    System.out.println("PlayerStrength: " + playerStrength);
+                    System.out.println("PlayerStrength: " + PlayerStrength);
                     System.out.println("PlayerIntelligence: " + playerIntelligence);
                     System.out.println("PlayerAgility: " + playerAgility);
                     System.out.println("PlayerLevel: " + playerLevel);
@@ -237,28 +143,132 @@ public class DungeonGameDatabase {
     }
 
 
-    //Update Player for each loop FRÅGA OM WHERE PÅ DENNA ANG ID
-    private static void updatePlayerStatusToDatabase(Connection connection, int PlayerID, String PlayerName, int PlayerStrenght, int PlayerIntelligence, int PlayerAgility, int PlayerLevel, int PlayerCoins) throws SQLException {
-        // SQL UPDATE statement
-        String updateSql = "UPDATE PlayerAutoSave SET PlayerName =?, PlayerStrenght = ?, PlayerIntelligence = ?, PlayerAgility = ?, PlayerLevel = ?, PlayerCoins = ? WHERE PlayerID = ?";
+    // Player win battle
+    public void registerPlayerWin(Player player, Monster monster) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
-            // Set parameters
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
 
-            preparedStatement.setString(1, PlayerName);
-            preparedStatement.setInt(2, PlayerStrenght);
-            preparedStatement.setInt(3, PlayerIntelligence);
-            preparedStatement.setInt(4, PlayerAgility);
-            preparedStatement.setInt(5, PlayerLevel);
-            preparedStatement.setInt(6, PlayerCoins);
-            preparedStatement.setInt(7, PlayerID);
+            // Save Player
+            battleStatus(connection, player.getNumber(), player.getName(), monster.getName(), monster.getStrength(), player.getStrength());
+
+            displayPlayerStatus(connection, player);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
-            // Execute the update
-            preparedStatement.executeUpdate();
-            System.out.println(CYAN + "'Player Status' auto-saved successfully to database" + RESET);
+    // Player win battle
+    public void registerMonsterWin(Player player, Monster monster) {
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+
+            // Save Player
+            battleStatus(connection, player.getNumber(), monster.getName(), player.getName(), monster.getStrength(), player.getStrength());
+
+            displayPlayerStatus(connection, player);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void battleStatus(Connection connection, int PlayerByNumber, String WinnerName, String LooserName, int MonsterStrength, int PlayerStrength) {
+
+        String insertPlayerSql = "INSERT INTO Battles (PlayerByNumber, WinnerName, LooserName, MonsterStrength, PlayerStrength) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
+
+            preparedStatement.setInt(1, PlayerByNumber);
+            preparedStatement.setString(2, WinnerName);
+            preparedStatement.setString(3, LooserName);
+            preparedStatement.setInt(4, MonsterStrength);
+            preparedStatement.setInt(5, PlayerStrength);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println(CYAN + "['New Battle' successfully added to the 'Battle'- table. " + rowsInserted + " Row]" + RESET);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
     }
+
+
+    // Player GameOver
+    public void registerDefeatedPlayer(Monster monster, Player player) {
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+
+            // Save Player
+            playerDefeated(connection, monster.getName(), monster.getStrength(), player.getName(), player.getNumber(), player.getHealth());
+
+            displayPlayerStatus(connection, player);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Register defeated players
+    public void playerDefeated(Connection connection, String ByMonsterName, int MonsterStrength, String PlayerName, int PlayerByNumber, int PlayerHealth) {
+
+        String insertPlayerSql = "INSERT INTO PlayersDefeated (ByMonsterName, MonsterStrength, PlayerName, PlayerByNumber, PlayerHealth) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
+
+            preparedStatement.setString(1, ByMonsterName);
+            preparedStatement.setInt(2, MonsterStrength);
+            preparedStatement.setString(3, PlayerName);
+            preparedStatement.setInt(4, PlayerByNumber);
+            preparedStatement.setInt(5, PlayerHealth);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println(CYAN + "['Defeated Player' successfully added to the 'Defeated players'- table. " + rowsInserted + " Row]" + RESET);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    // Player Wins the game
+    public void registerWinnerPlayer(Player player) {
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+
+            // Save Player
+            playerWinner(connection, player.getName(), player.getNumber(), player.getHealth(), player.getStrength());
+
+            displayPlayerStatus(connection, player);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Register Winners
+    public void playerWinner(Connection connection, String PlayerName, int PlayerByNumber, int PlayerHealth, int PlayerStrength) {
+
+        String insertPlayerSql = "INSERT INTO PlayersWinners (PlayerName, PlayerByNumber, PlayerHealth, PlayerStrength) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
+
+            preparedStatement.setString(1, PlayerName);
+            preparedStatement.setInt(2, PlayerByNumber);
+            preparedStatement.setInt(3, PlayerHealth);
+            preparedStatement.setInt(4, PlayerStrength);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println(CYAN + "['Winner player' successfully added to the 'Player winners'- table. " + rowsInserted + " Row]" + RESET);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }

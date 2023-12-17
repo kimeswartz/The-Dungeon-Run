@@ -15,7 +15,7 @@ public class Flee {
     public static void playerFleeTheFight(Player player, Monster monster) {
 
         DungeonGameDatabase autoSaveMonsters = new DungeonGameDatabase();
-        autoSaveMonsters.monsterToDatabase(monster, player);
+        //autoSaveMonsters.monsterToDatabase(monster, player);
 
         Random random = new Random();
 

@@ -4,7 +4,7 @@ import static com.kimswartz.app.colors.ChooseColors.*;
 
 public class Player extends Combat {
 
-    private int ID;
+    private int number;
     private String name;
     private int intelligence;
     private int experience;
@@ -26,12 +26,12 @@ public class Player extends Combat {
         super();
     }
 
-    public int getID() {
-        return ID;
+    public int getNumber() {
+        return number;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     public void setName(String name) {
@@ -44,7 +44,7 @@ public class Player extends Combat {
 
     public void getPlayerInfo() {
 
-        System.out.println("ID: " + getID());
+        System.out.println("ID: " + getNumber());
         System.out.println("Name: " + getName());
         System.out.println("Level: " + getLevel());
         System.out.println("Health: " + getHealth());

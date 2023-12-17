@@ -10,18 +10,9 @@ public class GameOver {
 
 
 
-    public static void getGameOverLogic(Player player, Monster monster) {
-
-        gameOverIfPlayerDies(player, monster);
-        gameOver(player);
-
-
-
-    }
-
     public static void gameOverIfPlayerDies(Player player, Monster monster) {
 
-
+        DungeonGameDatabase registerBattleWinner = new DungeonGameDatabase();
 
         if (monster.getHealth() <= 0 && player.getHealth() <= 0) {
             System.out.println("What a messy fight! Both you and " + monster + " died.");
@@ -30,6 +21,10 @@ public class GameOver {
 
         } else if (player.getHealth() <= 0) {
             System.out.println("\nYou were defeated by " + monster);
+
+
+
+            registerBattleWinner.registerDefeatedPlayer(monster, player);
             gameOver(player);
         }
 
