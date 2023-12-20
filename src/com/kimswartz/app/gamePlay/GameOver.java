@@ -23,7 +23,6 @@ public class GameOver {
             System.out.println("\nYou were defeated by " + monster);
 
 
-
             registerBattleWinner.registerDefeatedPlayer(monster, player);
             gameOver(player);
         }

@@ -1,5 +1,6 @@
 package com.kimswartz.app.gamePlay;
 
+import com.kimswartz.app.DungeonGameDatabase;
 import com.kimswartz.app.fighters.Player;
 
 import static com.kimswartz.app.colors.ChooseColors.*;
@@ -9,7 +10,6 @@ import java.util.Random;
 
 public class SetPlayer {
 
-
     public static int setAndGreetPlayer(Player player) {
 
         System.out.println(YELLOW + "Before it begins, enter your name:" + RESET);
@@ -17,7 +17,7 @@ public class SetPlayer {
         System.out.println("You are all set, " + GREEN + player.getName() + RESET);
 
         player.setHealth(70);
-        player.setStrength(35);
+        player.setStrength(40);
         player.setAgility(15);
         player.setIntelligence(15);
         player.setExperience(0);
@@ -32,10 +32,7 @@ public class SetPlayer {
         int randomNumber = random.nextInt(1000) + 1;
 
         player.setNumber(randomNumber);
-
-
         return randomNumber;
-
     }
 
 }

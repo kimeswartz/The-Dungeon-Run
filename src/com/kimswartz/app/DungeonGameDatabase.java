@@ -35,31 +35,8 @@ public class DungeonGameDatabase {
     }
 
 
-    // Push New Player
-    public void createPlayer(Connection connection, int PlayerNumber, String PlayerName, int PlayerHealth, int PlayerStrength, int PlayerIntelligence, int PlayerAgility, int PlayerLevel, int PlayerCoins) {
 
-        String insertPlayerSql = "INSERT INTO AutoSavePlayers (PlayerNumber, PlayerName, PlayerHealth, PlayerStrength, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
-            preparedStatement.setInt(1, PlayerNumber);
-            preparedStatement.setString(2, PlayerName);
-            preparedStatement.setInt(3, PlayerHealth);
-            preparedStatement.setInt(4, PlayerStrength);
-            preparedStatement.setInt(5, PlayerIntelligence);
-            preparedStatement.setInt(6, PlayerAgility);
-            preparedStatement.setInt(7, PlayerLevel);
-            preparedStatement.setInt(8, PlayerCoins);
-
-            int rowsInserted = preparedStatement.executeUpdate();
-            System.out.println(CYAN + "['New Player' successfully added to the 'Player'- table. " + rowsInserted + " Row]" + RESET);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    // 'Auto save' player:
+    // 'Auto save' player method:
     public void autoSaveAndUpdatePlayer(Player player) {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
@@ -100,7 +77,7 @@ public class DungeonGameDatabase {
     }
 
 
-    // Display player status
+    // Display player status from Database
     private static void displayPlayerStatus(Connection connection, Player player) {
 
         String selectPlayersSql = "SELECT PlayerName, PlayerStrength, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins FROM AutoSavePlayers WHERE PlayerNumber = ?";
@@ -142,8 +119,31 @@ public class DungeonGameDatabase {
 
     }
 
+    // Save Player To Database
+    public void createPlayer(Connection connection, int PlayerNumber, String PlayerName, int PlayerHealth, int PlayerStrength, int PlayerIntelligence, int PlayerAgility, int PlayerLevel, int PlayerCoins) {
 
-    // Player win battle
+        String insertPlayerSql = "INSERT INTO AutoSavePlayers (PlayerNumber, PlayerName, PlayerHealth, PlayerStrength, PlayerIntelligence, PlayerAgility, PlayerLevel, PlayerCoins) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
+            preparedStatement.setInt(1, PlayerNumber);
+            preparedStatement.setString(2, PlayerName);
+            preparedStatement.setInt(3, PlayerHealth);
+            preparedStatement.setInt(4, PlayerStrength);
+            preparedStatement.setInt(5, PlayerIntelligence);
+            preparedStatement.setInt(6, PlayerAgility);
+            preparedStatement.setInt(7, PlayerLevel);
+            preparedStatement.setInt(8, PlayerCoins);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println(CYAN + "['New Player' successfully added to the 'Player'- table. " + rowsInserted + " Row]" + RESET);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    // Player wins battle
     public void registerPlayerWin(Player player, Monster monster) {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
@@ -159,22 +159,7 @@ public class DungeonGameDatabase {
     }
 
 
-    // Player win battle
-    public void registerMonsterWin(Player player, Monster monster) {
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-
-            // Save Player
-            battleStatus(connection, player.getNumber(), monster.getName(), player.getName(), monster.getStrength(), player.getStrength());
-
-            displayPlayerStatus(connection, player);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
+    // Save Battle status to Database
     public void battleStatus(Connection connection, int PlayerByNumber, String WinnerName, String LooserName, int MonsterStrength, int PlayerStrength) {
 
         String insertPlayerSql = "INSERT INTO Battles (PlayerByNumber, WinnerName, LooserName, MonsterStrength, PlayerStrength) VALUES (?, ?, ?, ?, ?)";
@@ -196,7 +181,7 @@ public class DungeonGameDatabase {
     }
 
 
-    // Player GameOver
+    // Player GameOver Save dead player to database
     public void registerDefeatedPlayer(Monster monster, Player player) {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
@@ -212,7 +197,7 @@ public class DungeonGameDatabase {
     }
 
 
-    // Register defeated players
+    // Register defeated players to database
     public void playerDefeated(Connection connection, String ByMonsterName, int MonsterStrength, String PlayerName, int PlayerByNumber, int PlayerHealth) {
 
         String insertPlayerSql = "INSERT INTO PlayersDefeated (ByMonsterName, MonsterStrength, PlayerName, PlayerByNumber, PlayerHealth) VALUES (?, ?, ?, ?, ?)";
@@ -234,7 +219,7 @@ public class DungeonGameDatabase {
     }
 
 
-    // Player Wins the game
+    // Player Wins the game register to database
     public void registerWinnerPlayer(Player player) {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
@@ -250,10 +235,10 @@ public class DungeonGameDatabase {
     }
 
 
-    // Register Winners
+    // Register Winners to database
     public void playerWinner(Connection connection, String PlayerName, int PlayerByNumber, int PlayerHealth, int PlayerStrength) {
 
-        String insertPlayerSql = "INSERT INTO PlayersWinners (PlayerName, PlayerByNumber, PlayerHealth, PlayerStrength) VALUES (?, ?, ?, ?)";
+        String insertPlayerSql = "INSERT INTO PlayersWinners (PlayerName, PlayerNumber, PlayerHealth, PlayerStrength) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertPlayerSql)) {
 
@@ -269,6 +254,8 @@ public class DungeonGameDatabase {
         }
 
     }
+
+
 
 
 }

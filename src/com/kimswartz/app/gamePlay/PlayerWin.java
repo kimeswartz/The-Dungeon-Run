@@ -12,9 +12,8 @@ public class PlayerWin {
 
 
     public static void winTheGame(Player player) {
-
-        System.out.println(YELLOW + "Congratulations! You have defeated all the monsters and have thus won the game! Good work!" + RESET);
         DungeonGameDatabase registerWinner = new DungeonGameDatabase();
+        System.out.println(YELLOW + "Congratulations! You have defeated all the monsters and have thus won the game! Good work!" + RESET);
         registerWinner.registerWinnerPlayer(player);
         scan.close();
         System.exit(0);

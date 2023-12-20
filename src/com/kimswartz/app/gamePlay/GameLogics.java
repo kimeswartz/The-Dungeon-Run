@@ -21,13 +21,12 @@ public class GameLogics {
     static Player player = new Player();
     static List<Monster> monsterList = new ArrayList<>();
 
+
     public static void createAndSetPlayer() {
 
         SetPlayer.setAndGreetPlayer(player);
-
         DungeonGameDatabase DGD = new DungeonGameDatabase();
         DGD.savePlayer(player);
-
 
         // Set Monsters and put them into monsterList;
         int[] monsterStrength = {25, 30, 35, 40, 45, 55, 66, 80, 20, 15, 10};
